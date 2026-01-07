@@ -1311,6 +1311,29 @@ body {
         width: 100%;
         max-width: 200px;
     }
+
+    /* Fill Blank Mobile Styles */
+    .fill-blank-input-wrapper {
+        flex-direction: column;
+    }
+
+    .fill-blank-input {
+        width: 100%;
+    }
+
+    .submit-answer-btn {
+        width: 100%;
+        padding: var(--space-md);
+    }
+
+    .word-bank {
+        justify-content: center;
+    }
+
+    .word-bank-item {
+        font-size: var(--font-size-xs);
+        padding: var(--space-xs) var(--space-sm);
+    }
 }
 
 /* ========================================
