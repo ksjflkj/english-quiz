@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,11 +9,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <div class="app-container">
         <!-- 粒子背景 -->
         <div class="particles" id="particles"></div>
-        
+
         <!-- 头部导航 -->
         <header class="header">
             <div class="header-content">
@@ -35,7 +37,7 @@
                     <div class="start-icon">🎯</div>
                     <h1 class="start-title">计算机专业英语练习</h1>
                     <p class="start-subtitle">Computer & IoT English Quiz System</p>
-                    
+
                     <div class="quiz-stats">
                         <div class="stat-item">
                             <span class="stat-value" id="totalQuestions">0</span>
@@ -80,7 +82,7 @@
                     <button class="start-btn" id="startBtn">
                         <span>开始答题</span>
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                            <path d="M5 12h14M12 5l7 7-7 7" />
                         </svg>
                     </button>
                 </div>
@@ -90,7 +92,12 @@
             <section class="quiz-screen" id="quizScreen" style="display: none;">
                 <div class="quiz-header">
                     <div class="progress-info">
-                        <span class="current-question">题目 <span id="currentNum">1</span> / <span id="totalNum">20</span></span>
+                        <span class="current-question">题目 <span id="currentNum">1</span> / <span
+                                id="totalNum">20</span></span>
+                        <div class="timer-display" id="timerDisplay" style="display: none;">
+                            <span class="timer-icon">⏱️</span>
+                            <span class="timer-value">00:00</span>
+                        </div>
                         <div class="score-display">
                             <span class="correct-count">✓ <span id="correctCount">0</span></span>
                             <span class="wrong-count">✗ <span id="wrongCount">0</span></span>
@@ -104,9 +111,9 @@
                 <div class="question-card glass-card" id="questionCard">
                     <div class="question-type-badge" id="questionTypeBadge">选择题</div>
                     <h2 class="question-text" id="questionText"></h2>
-                    
+
                     <div class="options-container" id="optionsContainer"></div>
-                    
+
                     <div class="feedback-section" id="feedbackSection" style="display: none;">
                         <div class="feedback-content" id="feedbackContent"></div>
                     </div>
@@ -123,11 +130,11 @@
                 <div class="glass-card result-card">
                     <div class="result-icon" id="resultIcon">🎉</div>
                     <h1 class="result-title">答题完成！</h1>
-                    
+
                     <div class="score-circle">
                         <svg viewBox="0 0 100 100">
-                            <circle class="score-bg" cx="50" cy="50" r="45"/>
-                            <circle class="score-progress" cx="50" cy="50" r="45" id="scoreCircle"/>
+                            <circle class="score-bg" cx="50" cy="50" r="45" />
+                            <circle class="score-progress" cx="50" cy="50" r="45" id="scoreCircle" />
                         </svg>
                         <div class="score-text">
                             <span class="score-value" id="scoreValue">0</span>
@@ -166,7 +173,7 @@
                     <h2>错题回顾</h2>
                     <button class="close-btn" id="closeReviewBtn">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M18 6L6 18M6 6l12 12"/>
+                            <path d="M18 6L6 18M6 6l12 12" />
                         </svg>
                     </button>
                 </div>
@@ -178,4 +185,5 @@
     <script src="questions.js"></script>
     <script src="app.js"></script>
 </body>
+
 </html>

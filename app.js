@@ -14,6 +14,9 @@ class QuizApp {
         this.answered = false;
         this.wrongQuestions = [];
         this.questionCount = 20;
+        this.userAnswers = []; // 考试模式记录所有答案
+        this.timer = null;
+        this.timeRemaining = 0;
 
         this.init();
     }
@@ -86,6 +89,14 @@ class QuizApp {
         document.querySelectorAll('.nav-link').forEach(link => {
             link.classList.toggle('active', link.dataset.mode === mode);
         });
+
+        // 更新开始按钮文字
+        const startBtn = document.getElementById('startBtn');
+        if (mode === 'exam') {
+            startBtn.innerHTML = '<span>开始考试</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+        } else {
+            startBtn.innerHTML = '<span>开始答题</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+        }
     }
 
     // 更新统计数据
@@ -139,23 +150,98 @@ class QuizApp {
         this.wrongCount = 0;
         this.skippedCount = 0;
         this.wrongQuestions = [];
+        this.userAnswers = new Array(this.questions.length).fill(null);
+
+        // 考试模式：设置倒计时（每题1分钟）
+        if (this.currentMode === 'exam') {
+            this.timeRemaining = this.questions.length * 60; // 每题60秒
+            this.startTimer();
+        }
 
         // 显示答题界面
         this.showScreen('quiz');
+        this.updateUI();
         this.showQuestion();
+    }
+
+    // 更新UI根据模式
+    updateUI() {
+        const scoreDisplay = document.querySelector('.score-display');
+        const skipBtn = document.getElementById('skipBtn');
+        const timerDisplay = document.getElementById('timerDisplay');
+
+        if (this.currentMode === 'exam') {
+            // 考试模式：隐藏实时分数，禁用跳过
+            scoreDisplay.style.display = 'none';
+            skipBtn.style.display = 'none';
+            if (timerDisplay) timerDisplay.style.display = 'flex';
+        } else {
+            // 练习模式：显示实时分数，启用跳过
+            scoreDisplay.style.display = 'flex';
+            skipBtn.style.display = 'inline-block';
+            if (timerDisplay) timerDisplay.style.display = 'none';
+        }
+    }
+
+    // 开始倒计时
+    startTimer() {
+        const timerDisplay = document.getElementById('timerDisplay');
+        if (timerDisplay) {
+            timerDisplay.style.display = 'flex';
+        }
+
+        this.updateTimerDisplay();
+
+        this.timer = setInterval(() => {
+            this.timeRemaining--;
+            this.updateTimerDisplay();
+
+            if (this.timeRemaining <= 0) {
+                this.stopTimer();
+                alert('时间到！');
+                this.submitExam();
+            }
+        }, 1000);
+    }
+
+    // 更新计时器显示
+    updateTimerDisplay() {
+        const timerDisplay = document.getElementById('timerDisplay');
+        if (timerDisplay) {
+            const minutes = Math.floor(this.timeRemaining / 60);
+            const seconds = this.timeRemaining % 60;
+            timerDisplay.querySelector('.timer-value').textContent =
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+            // 时间少于1分钟时变红
+            if (this.timeRemaining < 60) {
+                timerDisplay.classList.add('urgent');
+            }
+        }
+    }
+
+    // 停止计时器
+    stopTimer() {
+        if (this.timer) {
+            clearInterval(this.timer);
+            this.timer = null;
+        }
     }
 
     // 显示当前题目
     showQuestion() {
         const question = this.questions[this.currentIndex];
-        this.selectedAnswer = null;
+        this.selectedAnswer = this.userAnswers[this.currentIndex];
         this.answered = false;
 
         // 更新进度
         document.getElementById('currentNum').textContent = this.currentIndex + 1;
         document.getElementById('totalNum').textContent = this.questions.length;
-        document.getElementById('correctCount').textContent = this.correctCount;
-        document.getElementById('wrongCount').textContent = this.wrongCount;
+
+        if (this.currentMode === 'practice') {
+            document.getElementById('correctCount').textContent = this.correctCount;
+            document.getElementById('wrongCount').textContent = this.wrongCount;
+        }
 
         // 更新进度条
         const progress = ((this.currentIndex) / this.questions.length) * 100;
@@ -183,20 +269,33 @@ class QuizApp {
                 const letter = option.charAt(0);
                 const text = option.substring(3);
                 const btn = this.createOptionButton(letter, text);
+                // 如果之前已选择，标记选中状态
+                if (this.selectedAnswer === letter) {
+                    btn.classList.add('selected');
+                }
                 container.appendChild(btn);
             });
         } else {
             const trueBtn = this.createOptionButton('T', 'True (正确)');
             const falseBtn = this.createOptionButton('F', 'False (错误)');
+            if (this.selectedAnswer === 'T') trueBtn.classList.add('selected');
+            if (this.selectedAnswer === 'F') falseBtn.classList.add('selected');
             container.appendChild(trueBtn);
             container.appendChild(falseBtn);
         }
 
-        // 隐藏反馈
+        // 隐藏反馈（练习模式下已答题则显示）
         document.getElementById('feedbackSection').style.display = 'none';
 
-        // 禁用下一题按钮
-        document.getElementById('nextBtn').disabled = true;
+        // 考试模式：启用下一题按钮
+        if (this.currentMode === 'exam') {
+            document.getElementById('nextBtn').disabled = false;
+            document.getElementById('nextBtn').textContent =
+                this.currentIndex === this.questions.length - 1 ? '提交试卷' : '下一题';
+        } else {
+            document.getElementById('nextBtn').disabled = true;
+            document.getElementById('nextBtn').textContent = '下一题';
+        }
 
         // 添加动画效果
         const card = document.getElementById('questionCard');
@@ -219,7 +318,7 @@ class QuizApp {
 
     // 选择选项
     selectOption(answer, btn) {
-        if (this.answered) return;
+        if (this.answered && this.currentMode === 'practice') return;
 
         // 移除之前的选中状态
         document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
@@ -227,12 +326,15 @@ class QuizApp {
         // 标记选中
         btn.classList.add('selected');
         this.selectedAnswer = answer;
+        this.userAnswers[this.currentIndex] = answer;
 
-        // 检查答案
-        this.checkAnswer();
+        // 练习模式：立即检查答案
+        if (this.currentMode === 'practice') {
+            this.checkAnswer();
+        }
     }
 
-    // 检查答案
+    // 检查答案（练习模式使用）
     checkAnswer() {
         const question = this.questions[this.currentIndex];
         let isCorrect = false;
@@ -324,14 +426,63 @@ class QuizApp {
         this.currentIndex++;
 
         if (this.currentIndex >= this.questions.length) {
-            this.showResult();
+            if (this.currentMode === 'exam') {
+                this.submitExam();
+            } else {
+                this.showResult();
+            }
         } else {
             this.showQuestion();
         }
     }
 
+    // 提交考试（考试模式）
+    submitExam() {
+        this.stopTimer();
+
+        // 计算成绩
+        this.correctCount = 0;
+        this.wrongCount = 0;
+        this.skippedCount = 0;
+        this.wrongQuestions = [];
+
+        this.questions.forEach((question, index) => {
+            const userAnswer = this.userAnswers[index];
+
+            if (userAnswer === null) {
+                this.skippedCount++;
+                this.wrongQuestions.push({
+                    question: question,
+                    userAnswer: null,
+                    status: 'skipped'
+                });
+            } else {
+                let isCorrect = false;
+                if (question.type === 'multiple') {
+                    isCorrect = userAnswer === question.answer;
+                } else {
+                    isCorrect = (userAnswer === 'T') === question.answer;
+                }
+
+                if (isCorrect) {
+                    this.correctCount++;
+                } else {
+                    this.wrongCount++;
+                    this.wrongQuestions.push({
+                        question: question,
+                        userAnswer: userAnswer,
+                        status: 'wrong'
+                    });
+                }
+            }
+        });
+
+        this.showResult();
+    }
+
     // 显示结果
     showResult() {
+        this.stopTimer();
         this.showScreen('result');
 
         const total = this.questions.length;
@@ -441,6 +592,7 @@ class QuizApp {
 
     // 重新开始
     restart() {
+        this.stopTimer();
         this.showScreen('start');
     }
 
