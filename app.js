@@ -17,6 +17,7 @@ class QuizApp {
         this.userAnswers = []; // 考试模式记录所有答案
         this.timer = null;
         this.timeRemaining = 0;
+        this.currentWordBank = []; // 当前填空题的词库
 
         this.init();
     }
@@ -84,6 +85,16 @@ class QuizApp {
 
         // 底部返回按钮
         document.getElementById('backToResultBtn').addEventListener('click', () => this.hideReview());
+
+        // 填空题确认按钮
+        document.getElementById('submitAnswerBtn').addEventListener('click', () => this.submitFillBlankAnswer());
+
+        // 填空题输入框回车提交
+        document.getElementById('fillBlankInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                this.submitFillBlankAnswer();
+            }
+        });
     }
 
     // 设置模式
@@ -106,19 +117,30 @@ class QuizApp {
     updateStats() {
         const multipleCount = questionData.multipleChoice.length;
         const tfCount = questionData.trueFalse.length;
-        const total = multipleCount + tfCount;
+
+        // 计算填空题总数
+        let fillBlankCount = 0;
+        if (questionData.fillBlank) {
+            questionData.fillBlank.forEach(group => {
+                fillBlankCount += group.questions.length;
+            });
+        }
+
+        const total = multipleCount + tfCount + fillBlankCount;
 
         document.getElementById('totalQuestions').textContent = total;
         document.getElementById('multipleCount').textContent = multipleCount;
         document.getElementById('tfCount').textContent = tfCount;
+        document.getElementById('fillBlankCount').textContent = fillBlankCount;
     }
 
     // 开始答题
     startQuiz() {
         const includeMultiple = document.getElementById('includeMultiple').checked;
         const includeTF = document.getElementById('includeTF').checked;
+        const includeFillBlank = document.getElementById('includeFillBlank').checked;
 
-        if (!includeMultiple && !includeTF) {
+        if (!includeMultiple && !includeTF && !includeFillBlank) {
             alert('请至少选择一种题型！');
             return;
         }
@@ -136,6 +158,19 @@ class QuizApp {
             this.questions = this.questions.concat(
                 questionData.trueFalse.map(q => ({ ...q, type: 'trueFalse' }))
             );
+        }
+
+        // 添加填空题
+        if (includeFillBlank && questionData.fillBlank) {
+            questionData.fillBlank.forEach(group => {
+                group.questions.forEach(q => {
+                    this.questions.push({
+                        ...q,
+                        type: 'fillBlank',
+                        wordBank: group.wordBank
+                    });
+                });
+            });
         }
 
         // 随机打乱题目
@@ -252,42 +287,75 @@ class QuizApp {
 
         // 更新题型标签
         const badge = document.getElementById('questionTypeBadge');
+        badge.classList.remove('tf', 'fillblank');
+
         if (question.type === 'multiple') {
             badge.textContent = '选择题';
-            badge.classList.remove('tf');
-        } else {
+        } else if (question.type === 'trueFalse') {
             badge.textContent = '判断题';
             badge.classList.add('tf');
+        } else if (question.type === 'fillBlank') {
+            badge.textContent = '填空题';
+            badge.classList.add('fillblank');
         }
 
         // 显示题目
         document.getElementById('questionText').textContent = question.question;
 
-        // 显示选项
-        const container = document.getElementById('optionsContainer');
-        container.innerHTML = '';
+        // 显示选项容器和填空题相关区域
+        const optionsContainer = document.getElementById('optionsContainer');
+        const wordBankSection = document.getElementById('wordBankSection');
+        const fillBlankInputSection = document.getElementById('fillBlankInputSection');
 
-        if (question.type === 'multiple') {
-            question.options.forEach((option, index) => {
-                const letter = option.charAt(0);
-                const text = option.substring(3);
-                const btn = this.createOptionButton(letter, text);
-                // 如果之前已选择，标记选中状态
-                if (this.selectedAnswer === letter) {
-                    btn.classList.add('selected');
-                }
-                container.appendChild(btn);
-            });
+        optionsContainer.innerHTML = '';
+
+        if (question.type === 'fillBlank') {
+            // 填空题
+            optionsContainer.style.display = 'none';
+            wordBankSection.style.display = 'block';
+            fillBlankInputSection.style.display = 'block';
+
+            // 显示词库
+            this.currentWordBank = [...question.wordBank];
+            this.renderWordBank();
+
+            // 清空输入框
+            const input = document.getElementById('fillBlankInput');
+            input.value = this.selectedAnswer || '';
+            input.disabled = false;
+            input.classList.remove('correct', 'wrong');
+            input.focus();
+
+            // 启用提交按钮
+            document.getElementById('submitAnswerBtn').disabled = false;
         } else {
-            const trueBtn = this.createOptionButton('T', 'True (正确)');
-            const falseBtn = this.createOptionButton('F', 'False (错误)');
-            if (this.selectedAnswer === 'T') trueBtn.classList.add('selected');
-            if (this.selectedAnswer === 'F') falseBtn.classList.add('selected');
-            container.appendChild(trueBtn);
-            container.appendChild(falseBtn);
+            // 选择题或判断题
+            optionsContainer.style.display = 'flex';
+            wordBankSection.style.display = 'none';
+            fillBlankInputSection.style.display = 'none';
+
+            if (question.type === 'multiple') {
+                question.options.forEach((option, index) => {
+                    const letter = option.charAt(0);
+                    const text = option.substring(3);
+                    const btn = this.createOptionButton(letter, text);
+                    // 如果之前已选择，标记选中状态
+                    if (this.selectedAnswer === letter) {
+                        btn.classList.add('selected');
+                    }
+                    optionsContainer.appendChild(btn);
+                });
+            } else {
+                const trueBtn = this.createOptionButton('T', 'True (正确)');
+                const falseBtn = this.createOptionButton('F', 'False (错误)');
+                if (this.selectedAnswer === 'T') trueBtn.classList.add('selected');
+                if (this.selectedAnswer === 'F') falseBtn.classList.add('selected');
+                optionsContainer.appendChild(trueBtn);
+                optionsContainer.appendChild(falseBtn);
+            }
         }
 
-        // 隐藏反馈（练习模式下已答题则显示）
+        // 隐藏反馈
         document.getElementById('feedbackSection').style.display = 'none';
 
         // 考试模式：启用下一题按钮
@@ -305,6 +373,118 @@ class QuizApp {
         card.style.animation = 'none';
         card.offsetHeight; // 触发重绘
         card.style.animation = 'slideUp 0.5s ease-out';
+    }
+
+    // 渲染词库
+    renderWordBank() {
+        const wordBank = document.getElementById('wordBank');
+        wordBank.innerHTML = '';
+
+        this.currentWordBank.forEach(word => {
+            const item = document.createElement('span');
+            item.className = 'word-bank-item';
+            item.textContent = word;
+            item.addEventListener('click', () => this.selectWordFromBank(word, item));
+            wordBank.appendChild(item);
+        });
+    }
+
+    // 从词库选择单词
+    selectWordFromBank(word, item) {
+        if (this.answered) return;
+
+        // 移除其他选中状态
+        document.querySelectorAll('.word-bank-item').forEach(w => w.classList.remove('selected'));
+
+        // 标记选中
+        item.classList.add('selected');
+
+        // 填入输入框
+        document.getElementById('fillBlankInput').value = word;
+        this.selectedAnswer = word;
+    }
+
+    // 提交填空题答案
+    submitFillBlankAnswer() {
+        if (this.answered) return;
+
+        const input = document.getElementById('fillBlankInput');
+        const userAnswer = input.value.trim().toLowerCase();
+
+        if (!userAnswer) {
+            input.focus();
+            return;
+        }
+
+        this.selectedAnswer = userAnswer;
+        this.userAnswers[this.currentIndex] = userAnswer;
+
+        if (this.currentMode === 'practice') {
+            this.checkFillBlankAnswer();
+        } else {
+            // 考试模式：只记录答案，不显示结果
+            document.getElementById('nextBtn').disabled = false;
+        }
+    }
+
+    // 检查填空题答案
+    checkFillBlankAnswer() {
+        const question = this.questions[this.currentIndex];
+        const userAnswer = this.selectedAnswer.toLowerCase();
+        const correctAnswer = question.answer.toLowerCase();
+
+        const isCorrect = userAnswer === correctAnswer;
+
+        this.answered = true;
+
+        // 标记输入框
+        const input = document.getElementById('fillBlankInput');
+        input.disabled = true;
+        input.classList.add(isCorrect ? 'correct' : 'wrong');
+
+        // 标记词库中的正确答案
+        document.querySelectorAll('.word-bank-item').forEach(item => {
+            if (item.textContent.toLowerCase() === correctAnswer) {
+                item.classList.add('correct');
+            } else if (item.textContent.toLowerCase() === userAnswer && !isCorrect) {
+                item.classList.add('wrong');
+            }
+        });
+
+        // 禁用提交按钮
+        document.getElementById('submitAnswerBtn').disabled = true;
+
+        // 更新计数
+        if (isCorrect) {
+            this.correctCount++;
+        } else {
+            this.wrongCount++;
+            this.wrongQuestions.push({
+                question: question,
+                userAnswer: this.selectedAnswer,
+                status: 'wrong'
+            });
+        }
+
+        // 显示反馈
+        const feedbackSection = document.getElementById('feedbackSection');
+        const feedbackContent = document.getElementById('feedbackContent');
+
+        feedbackSection.style.display = 'block';
+        feedbackContent.className = 'feedback-content ' + (isCorrect ? 'correct' : 'wrong');
+
+        if (isCorrect) {
+            feedbackContent.innerHTML = `<strong>✓ 回答正确！</strong><br>${question.explanation}`;
+        } else {
+            feedbackContent.innerHTML = `<strong>✗ 回答错误</strong><br>正确答案: ${question.answer}<br>${question.explanation}`;
+        }
+
+        // 更新分数显示
+        document.getElementById('correctCount').textContent = this.correctCount;
+        document.getElementById('wrongCount').textContent = this.wrongCount;
+
+        // 启用下一题按钮
+        document.getElementById('nextBtn').disabled = false;
     }
 
     // 创建选项按钮
@@ -337,7 +517,7 @@ class QuizApp {
         }
     }
 
-    // 检查答案（练习模式使用）
+    // 检查答案（选择题和判断题）
     checkAnswer() {
         const question = this.questions[this.currentIndex];
         let isCorrect = false;
@@ -461,10 +641,13 @@ class QuizApp {
                 });
             } else {
                 let isCorrect = false;
+
                 if (question.type === 'multiple') {
                     isCorrect = userAnswer === question.answer;
-                } else {
+                } else if (question.type === 'trueFalse') {
                     isCorrect = (userAnswer === 'T') === question.answer;
+                } else if (question.type === 'fillBlank') {
+                    isCorrect = userAnswer.toLowerCase() === question.answer.toLowerCase();
                 }
 
                 if (isCorrect) {
@@ -548,6 +731,7 @@ class QuizApp {
             reviewItem.className = 'review-item';
 
             let optionsHtml = '';
+
             if (q.type === 'multiple') {
                 q.options.forEach(option => {
                     const letter = option.charAt(0);
@@ -559,11 +743,15 @@ class QuizApp {
                     }
                     optionsHtml += `<div class="review-option ${optionClass}">${option}</div>`;
                 });
-            } else {
-                const correctAnswer = q.answer ? 'T' : 'F';
+            } else if (q.type === 'trueFalse') {
                 optionsHtml = `
                     <div class="review-option ${q.answer ? 'correct' : (item.userAnswer === 'T' ? 'user-wrong' : '')}">T. True (正确)</div>
                     <div class="review-option ${!q.answer ? 'correct' : (item.userAnswer === 'F' ? 'user-wrong' : '')}">F. False (错误)</div>
+                `;
+            } else if (q.type === 'fillBlank') {
+                optionsHtml = `
+                    <div class="review-option correct">正确答案: ${q.answer}</div>
+                    ${item.userAnswer ? `<div class="review-option user-wrong">你的答案: ${item.userAnswer}</div>` : '<div class="review-option user-wrong">未作答</div>'}
                 `;
             }
 

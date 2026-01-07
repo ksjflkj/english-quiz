@@ -633,6 +633,233 @@ const questionData = {
             answer: true,
             explanation: 'Dongles provide various functions like Wi-Fi, Bluetooth, or software licenses.'
         }
+    ],
+    // 填空题 - 选词填空
+    fillBlank: [
+        // 第一组词库
+        {
+            wordBank: ['algorithm', 'database', 'encryption', 'interface', 'network', 'protocol', 'sensor', 'software', 'virus', 'wireless'],
+            questions: [
+                {
+                    question: 'A ________ is a set of rules for communication between two or more devices.',
+                    answer: 'protocol',
+                    explanation: 'A protocol defines the rules and conventions for data communication between devices.'
+                },
+                {
+                    question: 'A ________ is a device that detects and responds to some type of input from the physical environment.',
+                    answer: 'sensor',
+                    explanation: 'Sensors convert physical phenomena into electrical signals that can be processed by a computer.'
+                },
+                {
+                    question: 'The ________ of a program is what the user interacts with.',
+                    answer: 'interface',
+                    explanation: 'The user interface (UI) is the point of interaction between the user and the software.'
+                },
+                {
+                    question: 'A ________ is a malicious program that can cause harm to a computer system.',
+                    answer: 'virus',
+                    explanation: 'Computer viruses are malicious programs designed to spread and cause damage.'
+                },
+                {
+                    question: '________ is the process of protecting data by converting it into a code.',
+                    answer: 'encryption',
+                    explanation: 'Encryption converts readable data into an encoded format to prevent unauthorized access.'
+                },
+                {
+                    question: 'A ________ is a collection of data organized for easy access and management.',
+                    answer: 'database',
+                    explanation: 'Databases store structured data that can be easily accessed, managed, and updated.'
+                },
+                {
+                    question: 'A ________ is a set of instructions for solving a problem or performing a task.',
+                    answer: 'algorithm',
+                    explanation: 'An algorithm is a step-by-step procedure for solving a specific problem.'
+                },
+                {
+                    question: 'A ________ network allows devices to communicate without the need for physical cables.',
+                    answer: 'wireless',
+                    explanation: 'Wireless networks use radio waves to connect devices without physical cables.'
+                },
+                {
+                    question: '________ is a general term for programs and applications that run on a computer.',
+                    answer: 'software',
+                    explanation: 'Software includes all programs, applications, and data that run on computer hardware.'
+                },
+                {
+                    question: 'A computer ________ is a group of computers and other devices that are connected together to share resources.',
+                    answer: 'network',
+                    explanation: 'A network enables computers and devices to communicate and share resources.'
+                }
+            ]
+        },
+        // 第二组词库
+        {
+            wordBank: ['bandwidth', 'debugging', 'firewall', 'graphic', 'motherboard', 'networking', 'operating system', 'peripheral', 'server', 'virus scanner'],
+            questions: [
+                {
+                    question: 'The ________ is the main printed circuit board in a computer.',
+                    answer: 'motherboard',
+                    explanation: 'The motherboard connects all computer components and allows them to communicate.'
+                },
+                {
+                    question: 'A ________ is a security device that controls incoming and outgoing network traffic.',
+                    answer: 'firewall',
+                    explanation: 'Firewalls monitor and filter network traffic based on security rules.'
+                },
+                {
+                    question: 'The amount of data that can be transmitted in a given time period is called ________.',
+                    answer: 'bandwidth',
+                    explanation: 'Bandwidth measures the data transfer capacity of a network connection.'
+                },
+                {
+                    question: 'A ________ is a program that detects and removes computer viruses.',
+                    answer: 'virus scanner',
+                    explanation: 'Virus scanners (antivirus software) protect computers from malicious programs.'
+                },
+                {
+                    question: 'A ________ is a device that is connected to a computer but is not part of its core components.',
+                    answer: 'peripheral',
+                    explanation: 'Peripherals include devices like printers, scanners, and external drives.'
+                },
+                {
+                    question: '________ is the process of finding and fixing errors in a computer program.',
+                    answer: 'debugging',
+                    explanation: 'Debugging involves identifying and resolving bugs or errors in software code.'
+                },
+                {
+                    question: 'A ________ is a computer that provides services to other computers on a network.',
+                    answer: 'server',
+                    explanation: 'Servers provide resources, data, and services to client computers.'
+                },
+                {
+                    question: 'An ________ is the software that manages a computer\'s hardware and software resources.',
+                    answer: 'operating system',
+                    explanation: 'The OS manages hardware resources and provides services for applications.'
+                },
+                {
+                    question: '________ is the practice of connecting computers and other devices together to share resources.',
+                    answer: 'networking',
+                    explanation: 'Networking enables communication and resource sharing between computers.'
+                },
+                {
+                    question: 'A ________ is a visual image or design on a computer screen.',
+                    answer: 'graphic',
+                    explanation: 'Graphics are visual elements displayed on computer screens.'
+                }
+            ]
+        },
+        // 第三组词库
+        {
+            wordBank: ['algorithm', 'bandwidth', 'database', 'encryption', 'firewall', 'interface', 'network', 'operating system', 'peripheral', 'virus'],
+            questions: [
+                {
+                    question: 'A ________ is a set of instructions for solving a particular problem.',
+                    answer: 'algorithm',
+                    explanation: 'Algorithms provide step-by-step instructions for solving computational problems.'
+                },
+                {
+                    question: 'The ________ of a network determines how much data can be transferred at a given time.',
+                    answer: 'bandwidth',
+                    explanation: 'Higher bandwidth allows more data to be transferred simultaneously.'
+                },
+                {
+                    question: 'A ________ is a collection of related data stored in a computer system.',
+                    answer: 'database',
+                    explanation: 'Databases organize and store structured data for efficient retrieval.'
+                },
+                {
+                    question: '________ is the process of converting data into a coded form to prevent unauthorized access.',
+                    answer: 'encryption',
+                    explanation: 'Encryption protects sensitive data by converting it into an unreadable format.'
+                },
+                {
+                    question: 'A ________ is a security system that controls the incoming and outgoing network traffic.',
+                    answer: 'firewall',
+                    explanation: 'Firewalls act as barriers between trusted and untrusted networks.'
+                },
+                {
+                    question: 'The user ________ of a software program should be easy to understand and use.',
+                    answer: 'interface',
+                    explanation: 'A good user interface provides an intuitive experience for users.'
+                },
+                {
+                    question: 'A computer ________ is a group of interconnected computers and other devices.',
+                    answer: 'network',
+                    explanation: 'Networks enable communication and resource sharing between connected devices.'
+                },
+                {
+                    question: 'The ________ is the software that manages a computer\'s hardware and software resources.',
+                    answer: 'operating system',
+                    explanation: 'Operating systems coordinate hardware and software operations.'
+                },
+                {
+                    question: 'A ________ device is any external device that connects to a computer.',
+                    answer: 'peripheral',
+                    explanation: 'Peripherals extend the functionality of a computer system.'
+                },
+                {
+                    question: 'A ________ is a malicious program that can cause damage to a computer system.',
+                    answer: 'virus',
+                    explanation: 'Computer viruses can corrupt data, steal information, or damage systems.'
+                }
+            ]
+        },
+        // 第四组词库
+        {
+            wordBank: ['architecture', 'bandwidth', 'database', 'debugging', 'encrypt', 'interface', 'malware', 'network', 'protocol', 'sensor'],
+            questions: [
+                {
+                    question: 'The ________ of a computer system includes its hardware components and how they are connected.',
+                    answer: 'architecture',
+                    explanation: 'System architecture defines the structure and organization of computer components.'
+                },
+                {
+                    question: 'High-definition video streaming requires a large amount of ________ to ensure smooth playback.',
+                    answer: 'bandwidth',
+                    explanation: 'HD video requires high bandwidth for buffer-free streaming.'
+                },
+                {
+                    question: 'A ________ is used to store and manage a large amount of structured data.',
+                    answer: 'database',
+                    explanation: 'Databases efficiently store and manage large volumes of structured data.'
+                },
+                {
+                    question: 'The process of finding and fixing errors in a program is called ________.',
+                    answer: 'debugging',
+                    explanation: 'Debugging is essential for ensuring software works correctly.'
+                },
+                {
+                    question: 'To protect sensitive information, it is necessary to ________ it before transmission.',
+                    answer: 'encrypt',
+                    explanation: 'Encrypting data before transmission prevents unauthorized interception.'
+                },
+                {
+                    question: 'The user ________ of a software application should be intuitive and easy to use.',
+                    answer: 'interface',
+                    explanation: 'Good interface design improves user experience and productivity.'
+                },
+                {
+                    question: 'A computer system can be infected by various types of ________, such as viruses and worms.',
+                    answer: 'malware',
+                    explanation: 'Malware is a general term for malicious software including viruses, worms, and trojans.'
+                },
+                {
+                    question: 'The Internet operates based on a set of ________ that govern data transmission.',
+                    answer: 'protocol',
+                    explanation: 'Internet protocols like TCP/IP define how data is transmitted across networks.'
+                },
+                {
+                    question: 'A ________ is a device that detects physical or environmental conditions.',
+                    answer: 'sensor',
+                    explanation: 'Sensors convert physical phenomena into electrical signals for processing.'
+                },
+                {
+                    question: 'A local area ________ connects computers and other devices within a limited area.',
+                    answer: 'network',
+                    explanation: 'LANs connect devices within a building or campus.'
+                }
+            ]
+        }
     ]
 };
 

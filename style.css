@@ -605,6 +605,140 @@ body {
     background: var(--secondary-gradient);
 }
 
+.question-type-badge.fillblank {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+/* Word Bank Section */
+.word-bank-section {
+    margin-bottom: var(--space-xl);
+    padding: var(--space-lg);
+    background: rgba(240, 147, 251, 0.05);
+    border: 1px solid rgba(240, 147, 251, 0.2);
+    border-radius: var(--radius-md);
+}
+
+.word-bank-label {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: var(--space-md);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.word-bank {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+}
+
+.word-bank-item {
+    padding: var(--space-sm) var(--space-md);
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.word-bank-item:hover {
+    background: rgba(240, 147, 251, 0.1);
+    border-color: rgba(240, 147, 251, 0.5);
+    transform: translateY(-2px);
+}
+
+.word-bank-item.selected {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    border-color: transparent;
+    color: white;
+}
+
+.word-bank-item.used {
+    opacity: 0.4;
+    cursor: not-allowed;
+    text-decoration: line-through;
+}
+
+.word-bank-item.correct {
+    background: var(--correct-color);
+    border-color: transparent;
+    color: #0a0a1a;
+}
+
+.word-bank-item.wrong {
+    background: var(--wrong-color);
+    border-color: transparent;
+    color: white;
+}
+
+/* Fill Blank Input Section */
+.fill-blank-input-section {
+    margin-top: var(--space-lg);
+}
+
+.fill-blank-input-wrapper {
+    display: flex;
+    gap: var(--space-md);
+}
+
+.fill-blank-input {
+    flex: 1;
+    padding: var(--space-md) var(--space-lg);
+    background: var(--bg-card);
+    border: 2px solid var(--border-light);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-lg);
+    font-family: var(--font-family);
+    color: var(--text-primary);
+    transition: all var(--transition-base);
+}
+
+.fill-blank-input:focus {
+    outline: none;
+    border-color: rgba(240, 147, 251, 0.5);
+    box-shadow: 0 0 20px rgba(240, 147, 251, 0.2);
+}
+
+.fill-blank-input::placeholder {
+    color: var(--text-muted);
+}
+
+.fill-blank-input.correct {
+    border-color: var(--correct-color);
+    background: rgba(56, 239, 125, 0.1);
+}
+
+.fill-blank-input.wrong {
+    border-color: var(--wrong-color);
+    background: rgba(255, 107, 107, 0.1);
+}
+
+.submit-answer-btn {
+    padding: var(--space-md) var(--space-xl);
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.submit-answer-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px rgba(240, 147, 251, 0.4);
+}
+
+.submit-answer-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 .question-text {
     font-size: var(--font-size-xl);
     font-weight: 500;
