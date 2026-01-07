@@ -170,14 +170,19 @@
             <!-- 错题回顾 -->
             <section class="review-screen" id="reviewScreen" style="display: none;">
                 <div class="review-header">
-                    <h2>错题回顾</h2>
-                    <button class="close-btn" id="closeReviewBtn">
+                    <button class="back-btn" id="closeReviewBtn">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M18 6L6 18M6 6l12 12" />
+                            <path d="M19 12H5M12 19l-7-7 7-7" />
                         </svg>
+                        <span>返回结果</span>
                     </button>
+                    <h2>错题回顾</h2>
+                    <div class="review-header-spacer"></div>
                 </div>
                 <div class="review-list" id="reviewList"></div>
+                <div class="review-footer">
+                    <button class="action-btn primary" id="backToResultBtn">返回结果页</button>
+                </div>
             </section>
         </main>
     </div>

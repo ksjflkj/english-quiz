@@ -79,8 +79,11 @@ class QuizApp {
         // 查看错题按钮
         document.getElementById('reviewBtn').addEventListener('click', () => this.showReview());
 
-        // 关闭错题回顾
+        // 关闭错题回顾（顶部返回按钮）
         document.getElementById('closeReviewBtn').addEventListener('click', () => this.hideReview());
+
+        // 底部返回按钮
+        document.getElementById('backToResultBtn').addEventListener('click', () => this.hideReview());
     }
 
     // 设置模式

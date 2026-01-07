@@ -944,11 +944,61 @@ body {
     align-items: center;
     max-width: 800px;
     margin: 0 auto var(--space-xl);
+    padding-bottom: var(--space-md);
+    border-bottom: 1px solid var(--border-light);
 }
 
 .review-header h2 {
     font-size: var(--font-size-2xl);
     font-weight: 700;
+    flex: 1;
+    text-align: center;
+}
+
+.review-header-spacer {
+    width: 120px;
+}
+
+/* Back Button */
+.back-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-full);
+    color: var(--text-primary);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    min-width: 120px;
+}
+
+.back-btn:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--border-glow);
+    transform: translateX(-3px);
+}
+
+.back-btn svg {
+    width: 18px;
+    height: 18px;
+    transition: transform var(--transition-base);
+}
+
+.back-btn:hover svg {
+    transform: translateX(-3px);
+}
+
+/* Review Footer */
+.review-footer {
+    max-width: 800px;
+    margin: var(--space-2xl) auto;
+    text-align: center;
+    padding-top: var(--space-xl);
+    border-top: 1px solid var(--border-light);
 }
 
 .close-btn {
